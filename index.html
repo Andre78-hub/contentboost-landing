@@ -806,33 +806,62 @@
             observer.observe(el);
         });
 
-        // Функция для показа модального окна и обработки формы
-        function showModal(event) {
-            // event.preventDefault(); // Раскомментируйте для тестирования без перезагрузки
-            const modal = document.getElementById('successModal');
-            modal.classList.add('show');
-            
-            setTimeout(() => {
-                document.getElementById('email-form').reset();
-            }, 10000);
+       // Функция для показа модального окна и обработки формы
+function showModal(event) {
+    // ПРЕДОТВРАЩАЕМ перезагрузку страницы для тестирования
+    event.preventDefault(); 
+    
+    // Показываем модальное окно
+    const modal = document.getElementById('successModal');
+    modal.classList.add('show');
+    
+    // Очистка формы после успешной отправки
+    document.getElementById('email-form').reset();
+    
+    // === ДЛЯ РЕАЛЬНОЙ РАБОТЫ С NETLIFY ===
+    // Раскомментируйте этот блок, когда форма будет готова к работе!
+   // Создаем новый FormData объект
+    const formData = new FormData(event.target);
+    
+    // Отправляем данные в Netlify с помощью fetch
+    fetch('/', {
+        method: 'POST',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString()
+    }).then(() => {
+        // Показываем окно только после успешной отправки
+        const modal = document.getElementById('successModal');
+        modal.classList.add('show');
+        document.getElementById('email-form').reset();
+    }).catch(error => {
+        console.error('Ошибка отправки формы:', error);
+        alert('Произошла ошибка. Попробуйте еще раз.');
+    });
+    */
+}
+
+// Закрытие модального окна - ДОБАВЬТЕ ЭТОТ КОД
+function closeModal() {
+    document.getElementById('successModal').classList.remove('show');
+}
+
+// Назначение обработчиков событий - ДОБАВЬТЕ ЭТОТ КОД
+document.addEventListener('DOMContentLoaded', function() {
+    // Закрытие модального окна
+    document.querySelector('.close').addEventListener('click', closeModal);
+    document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+    
+    // Закрытие при клике вне окна
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('successModal');
+        if (event.target === modal) {
+            closeModal();
         }
-
-        // Закрытие модального окна
-        document.querySelector('.close').addEventListener('click', function() {
-            document.getElementById('successModal').classList.remove('show');
-        });
-
-        document.getElementById('modalCloseBtn').addEventListener('click', function() {
-            document.getElementById('successModal').classList.remove('show');
-        });
-
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('successModal');
-            if (event.target === modal) {
-                modal.classList.remove('show');
-            }
-        });
-
+    });
+    
+    // Обработчик формы
+    document.getElementById('email-form').addEventListener('submit', showModal);
+});
         // Фиксация хедера
         window.addEventListener('scroll', function() {
             const header = document.querySelector('.header');
@@ -846,4 +875,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -660,71 +660,34 @@
             <div class="form-container">
                 <h3>Заполните форму для участия</h3>
                 <p>Укажите сайт и основные боли — это поможет подготовить аудит качественнее.</p>
-                <form 
-  name="email-form" 
-  method="POST" 
-  data-netlify="true" 
-  data-netlify-honeypot="bot-field" 
-  action="/success" 
-  class="email-form"
->
-  <!-- Скрытое поле от спама -->
-  <div hidden>
-    <input name="form-name" value="email-form" />
-    <label>Не заполняйте это поле: <input name="bot-field" /></label>
-  </div>
+                <form id="email-form" 
+      action="/success.html" 
+      method="POST" 
+      data-netlify="true" 
+      netlify-honeypot="bot-field">
+    
+    <!-- Скрытое антиспам поле -->
+    <p class="hidden">
+        <label>Не заполняйте, если вы человек: <input name="bot-field"></label>
+    </p>
 
-  <!-- Имя -->
-  <div class="form-group">
-    <label for="name">Ваше имя</label>
-    <input 
-      type="text" 
-      id="name" 
-      name="name" 
-      required 
-      placeholder="Например, Иван"
-    >
-  </div>
-
-  <!-- Email -->
-  <div class="form-group">
-    <label for="email">Ваш Email</label>
-    <input 
-      type="email" 
-      id="email" 
-      name="email" 
-      required 
-      placeholder="email@example.com"
-    >
-  </div>
-
-  <!-- Сайт -->
-  <div class="form-group">
-    <label for="website">Адрес вашего сайта</label>
-    <input 
-      type="url" 
-      id="website" 
-      name="website" 
-      placeholder="https://вашсайт.рф"
-    >
-  </div>
-
-  <!-- Сообщение -->
-  <div class="form-group">
-    <label for="message">Что вас беспокоит больше всего? (падение трафика, низкие позиции, мало заявок и т.д.)</label>
-    <input 
-      type="text" 
-      id="message" 
-      name="message" 
-      required 
-      placeholder="Кратко опишите проблему"
-    >
-  </div>
-
-  <!-- Кнопка отправки -->
-  <button type="submit" class="btn btn-block">
-    Отправить заявку на бесплатный аудит
-  </button>
+    <div class="form-group">
+        <label for="name">Ваше имя</label>
+        <input type="text" id="name" name="name" required placeholder="Например, Иван">
+    </div>
+    <div class="form-group">
+        <label for="email">Ваш Email</label>
+        <input type="email" id="email" name="email" required placeholder="email@example.com">
+    </div>
+    <div class="form-group">
+        <label for="website">Адрес вашего сайта</label>
+        <input type="url" id="website" name="website" placeholder="https://">
+    </div>
+    <div class="form-group">
+        <label for="message">Что вас беспокоит больше всего? (падение трафика/заявок, неработающее SEO и т.д.)</label>
+        <input type="text" id="message" name="message" placeholder="Опишите кратко">
+    </div>
+    <button type="submit" name="submit" class="btn btn-block">Отправить заявку на бесплатный аудит</button>
 </form>
             </div>
         </div>
@@ -741,17 +704,7 @@
             </div>
         </div>
     </footer>
-
-    <!-- Модальное окно -->
-    <div id="successModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2><i class="fas fa-check-circle" style="color: var(--accent);"></i> Заявка принята!</h2>
-            <p>Спасибо за ваше доверие! Мы уже начали работу и свяжемся с вами в течение 2 часов для уточнения деталей.</p>
-            <button class="btn" id="modalCloseBtn">Закрыть</button>
-        </div>
-    </div>
-
+    
     <script>
         // Паралакс для героя и секций
         window.addEventListener('scroll', function() {
@@ -806,62 +759,6 @@
             observer.observe(el);
         });
 
-       // Функция для показа модального окна и обработки формы
-function showModal(event) {
-    // ПРЕДОТВРАЩАЕМ перезагрузку страницы для тестирования
-    event.preventDefault(); 
-    
-    // Показываем модальное окно
-    const modal = document.getElementById('successModal');
-    modal.classList.add('show');
-    
-    // Очистка формы после успешной отправки
-    document.getElementById('email-form').reset();
-    
-    // === ДЛЯ РЕАЛЬНОЙ РАБОТЫ С NETLIFY ===
-    // Раскомментируйте этот блок, когда форма будет готова к работе!
-   // Создаем новый FormData объект
-    const formData = new FormData(event.target);
-    
-    // Отправляем данные в Netlify с помощью fetch
-    fetch('/', {
-        method: 'POST',
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString()
-    }).then(() => {
-        // Показываем окно только после успешной отправки
-        const modal = document.getElementById('successModal');
-        modal.classList.add('show');
-        document.getElementById('email-form').reset();
-    }).catch(error => {
-        console.error('Ошибка отправки формы:', error);
-        alert('Произошла ошибка. Попробуйте еще раз.');
-    });
-    */
-}
-
-// Закрытие модального окна - ДОБАВЬТЕ ЭТОТ КОД
-function closeModal() {
-    document.getElementById('successModal').classList.remove('show');
-}
-
-// Назначение обработчиков событий - ДОБАВЬТЕ ЭТОТ КОД
-document.addEventListener('DOMContentLoaded', function() {
-    // Закрытие модального окна
-    document.querySelector('.close').addEventListener('click', closeModal);
-    document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
-    
-    // Закрытие при клике вне окна
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('successModal');
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-    
-    // Обработчик формы
-    document.getElementById('email-form').addEventListener('submit', showModal);
-});
         // Фиксация хедера
         window.addEventListener('scroll', function() {
             const header = document.querySelector('.header');
@@ -877,3 +774,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
+
